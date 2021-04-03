@@ -10,7 +10,10 @@ namespace Vaccinator.Controllers
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("");
+            //optionsBuilder.UseNpgsql("Host=localhost,Database=vaccinator,Username=baptistebrs;Password=442306200007,");
+            optionsBuilder.UseSqlite("Data Source = vaccinator.db");
+            //optionsBuilder.UseNpgsql("data source = vaccinator.db");
+
         }
     }
 }
