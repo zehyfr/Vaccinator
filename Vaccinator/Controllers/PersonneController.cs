@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vaccinator.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -40,6 +42,18 @@ namespace Vaccinator.Controllers
                     personnes = personnes.OrderBy(p => p.nom);
                     break;
             }
+
+            List<string> ListMaladies = new List<string>();
+            foreach (var injection in _context.Injections)
+            {
+                if (!ListMaladies.Contains(injection.Maladie))
+                {
+                    ListMaladies.Add(injection.Maladie);
+                }
+            }
+            
+            ViewData["listeMaladies"]= ListMaladies;
+            
             return View(await personnes.AsNoTracking().ToListAsync());
         }
         

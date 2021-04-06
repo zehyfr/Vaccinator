@@ -1,3 +1,4 @@
+@using System.Collections
 @model IEnumerable<Vaccinator.Models.Personne>
 
 @{
@@ -15,6 +16,12 @@
         </p>
     </div>
 </form>
+
+<div class="form-group">
+    
+    <!--Maladie : @Html.DropDownList("MaladieSelectionnee", new SelectList((IEnumerable) ViewData["listeMaladies"],"Maladie","Maladie"))-->
+    
+</div>
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
