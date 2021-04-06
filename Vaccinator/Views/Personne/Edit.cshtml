@@ -27,18 +27,23 @@
                 <input asp-for="ddn" class="form-control" />
                 <span asp-validation-for="ddn" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="sexe" class="control-label"></label>
-                <!--<input asp-for="sexe" class="form-control" />-->
-                <select asp-for="sexe" class="form-control"/>
-                <span asp-validation-for="sexe" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="role" class="control-label"></label>
-                <!--<input asp-for="role" class="form-control" />-->
-                <select asp-for="role" class="form-control"/>
-                <span asp-validation-for="role" class="text-danger"></span>
-            </div>
+           <div class="form-group">
+               <label asp-for="sexe" class="control-label"></label>
+               <select name="sexe">
+                   <option value="H">Homme</option>
+                   <option value="F">Femme</option>
+                   <option value="A">Autre</option>
+               </select>
+               <span asp-validation-for="sexe" class="text-danger"></span>
+           </div>
+           <div class="form-group">
+               <label asp-for="role" class="control-label"></label>
+               <select name="role">
+                   <option value="Resident">Resident</option>
+                   <option value="Personnel">Personnel</option>
+               </select>
+               <span asp-validation-for="role" class="text-danger"></span>
+           </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

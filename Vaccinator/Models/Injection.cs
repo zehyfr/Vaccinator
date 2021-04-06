@@ -7,10 +7,10 @@ namespace Vaccinator.Models
 {
     public class Injection
     {
-        
         [Key]
         public string uuid { get; set;}
         
+        [Display(Name = "Personne")]
         [ForeignKey("uuid")]
         [Required]
         public virtual Personne Personne { get; set; }

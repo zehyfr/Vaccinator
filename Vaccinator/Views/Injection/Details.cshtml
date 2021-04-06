@@ -1,0 +1,39 @@
+@model Vaccinator.Models.Injection
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Injection</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Maladie)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Marque)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumLot)
+        </dt>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Personne.nom)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DatePrise)
+        </dd>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateRappel)
+        </dd>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StatusRappel)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.uuid">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

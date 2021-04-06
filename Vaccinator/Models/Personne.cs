@@ -27,7 +27,7 @@ namespace Vaccinator.Models
         [Required]
         public string role{ get; set;}
         
-        [NotMapped]
+        
         public virtual ICollection<Injection> injections { get; set; }
     }
 }

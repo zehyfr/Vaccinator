@@ -3,41 +3,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vaccinator.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Vaccinator.Controllers
 {
-    public class PersonneController : Controller
+    public class InjectionController : Controller
     {
         private readonly ContextBDD _context = new ContextBDD();
        
-        // GET: Personnes
+        // GET: Injections
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Personnes.ToListAsync());
+            return View(await _context.Injections.ToListAsync());
         }
         
-        // GET: Personne/Injection
-        public async Task<IActionResult> InjectionPerPersonne(string? uuid)
-        {
-            
-            if (uuid == null)
-            {
-                return NotFound();
-            }
-
-            var listInjectionsPersonne = await _context.Injections
-                .Where(injection => injection.Personne.uuid == uuid).ToListAsync();
-
-            if (listInjectionsPersonne.Count == 0)
-            {
-                ViewBag.Message = "Cette personne n'a aucune injection";
-            }
-            
-            return View(listInjectionsPersonne);
-        }
-        
-        // GET: Personne/Details/5
+        // GET: Injections/Details/5
         public async Task<IActionResult> Details(string? uuid)
         {
             if (uuid == null)
@@ -45,46 +26,53 @@ namespace Vaccinator.Controllers
                 return NotFound();
             }
 
-            var personne = await _context.Personnes
+            var injection = await _context.Injections
                 .FirstOrDefaultAsync(m => m.uuid == uuid);
-            if (personne == null)
+            if (injection == null)
             {
                 return NotFound();
             }
 
-            return View(personne);
+            return View(injection);
         }
         
-        // GET: Categories/Create
+        // GET: Injections/Create
         public IActionResult Create()
         {
+            ViewData["listePersonnes"]= new SelectList(_context.Personnes,"uuid","nom");
             return View();
         }
         
-        // POST: Personnes/Create
+        // POST: Injections/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("nom,prenom,ddn,sexe,role")] Personne personne)
+        public async Task<IActionResult> Create([Bind("Maladie,Marque,NumLot,DAtePrise,DateRappel,StatusRappel,isRappel")] Injection injection,string Personne)
         {
-           
-            var new_uuid = Guid.NewGuid().ToString();
-            personne.uuid = new_uuid;
+            
+            var newUuid = Guid.NewGuid().ToString();
+            injection.uuid = newUuid;
+            injection.StatusRappel = false;
+            var newPersonne = await _context.Personnes.FindAsync(Personne);
+            injection.Personne = newPersonne;
+            Console.WriteLine(newUuid);
+            Console.WriteLine(injection.Personne.nom);
             //Force la réévaluation de modelState
             ModelState.Clear();
-            TryValidateModel(personne);
-            
+            TryValidateModel(injection);
+
             if (ModelState.IsValid)
             {
-                _context.Add(personne);
+                _context.Add(injection);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(personne);
+            ViewData["listePersonnes"]= new SelectList(_context.Personnes,"uuid","nom");
+            return View(injection);
         }
         
-        // GET: Personnes/Edit/5
+        // GET: Injections/Edit/5
         public async Task<IActionResult> Edit(string? uuid)
         {
             if (uuid == null)
@@ -92,22 +80,23 @@ namespace Vaccinator.Controllers
                 return NotFound();
             }
 
-            var personne = await _context.Personnes.FindAsync(uuid);
-            if (personne == null)
+            var injection = await _context.Injections.FindAsync(uuid);
+            if (injection == null)
             {
                 return NotFound();
             }
-            return View(personne);
+            ViewData["listePersonnes"]= new SelectList(_context.Personnes,"uuid","nom");
+            return View(injection);
         }
         
-        // POST: Personnes/Edit/5
+        // POST: Injections/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string uuid, [Bind("Id,Libelle,Description")] Personne personne)
+        public async Task<IActionResult> Edit(string uuid, [Bind("uuid")] Injection injection)
         {
-            if (uuid != personne.uuid)
+            if (uuid != injection.uuid)
             {
                 return NotFound();
             }
@@ -116,12 +105,12 @@ namespace Vaccinator.Controllers
             {
                 try
                 {
-                    _context.Update(personne);
+                    _context.Update(injection);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonneExist(personne.uuid))
+                    if (!InjectionExist(injection.uuid))
                     {
                         return NotFound();
                     }
@@ -132,10 +121,10 @@ namespace Vaccinator.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(personne);
+            return View(injection);
         }
         
-        // GET: Personnes/Delete/5
+        // GET: Injections/Delete/5
         public async Task<IActionResult> Delete(string? uuid)
         {
             if (uuid == null)
@@ -143,30 +132,30 @@ namespace Vaccinator.Controllers
                 return NotFound();
             }
 
-            var personne = await _context.Personnes
+            var injection = await _context.Injections
                 .FirstOrDefaultAsync(m => m.uuid == uuid);
-            if (personne == null)
+            if (injection == null)
             {
                 return NotFound();
             }
 
-            return View(personne);
+            return View(injection);
         }
         
-        // POST: Personne/Delete/5
+        // POST: Injection/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string uuid)
         {
-            var personne = await _context.Personnes.FindAsync(uuid);
-            _context.Personnes.Remove(personne);
+            var injection = await _context.Injections.FindAsync(uuid);
+            _context.Injections.Remove(injection);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PersonneExist(string uuid)
+        private bool InjectionExist(string uuid)
         {
-            return _context.Personnes.Any(e => e.uuid == uuid);
+            return _context.Injections.Any(e => e.uuid == uuid);
         }
 
 

@@ -73,3 +73,9 @@
 /home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Personne/Details.cshtml.g.cs
 /home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Personne/Edit.cshtml.g.cs
 /home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Personne/Index.cshtml.g.cs
+/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Injection/Create.cshtml.g.cs
+/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Injection/Delete.cshtml.g.cs
+/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Injection/Details.cshtml.g.cs
+/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Injection/Edit.cshtml.g.cs
+/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Injection/Index.cshtml.g.cs
+/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/Debug/net5.0/Razor/Views/Personne/InjectionPerPersonne.cshtml.g.cs

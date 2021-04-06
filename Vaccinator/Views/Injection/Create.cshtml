@@ -1,0 +1,72 @@
+@using Vaccinator.Controllers
+@using Microsoft.EntityFrameworkCore.Infrastructure
+@model Vaccinator.Models.Injection
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Injection</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="isRappel" class="input-label">Cette injection est un rappel</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="rappel" name="isRappel" value="true"/>
+                  <label for="rappel" class="form-check-label">Oui</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="notRappel" name="isRappel" value="false"/>
+                  <label for="notRappel" class="form-check-label">Non</label>
+                </div>
+              </div>
+            <div class="form-group">
+                <label asp-for="Maladie" class="control-label"></label>
+                <input asp-for="Maladie" class="form-control" />
+                <span asp-validation-for="Maladie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Marque" class="control-label"></label>
+                <input asp-for="Marque" class="form-control" />
+                <span asp-validation-for="Marque" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumLot" class="control-label"></label>
+                <input asp-for="NumLot" class="form-control" />
+                <span asp-validation-for="NumLot" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Personne" class="control-label"></label>
+                @Html.DropDownListFor(c=>Model.Personne,(SelectList)ViewData["listePersonnes"],"Selectionnez une personne",new {@class ="form-control"})
+                <span asp-validation-for="Personne" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatePrise" class="control-label"></label>
+                @Html.EditorFor(m=>m.DatePrise)
+            </div>
+            <div class="form-group">
+                <label asp-for="DateRappel" class="control-label"></label>
+                @Html.EditorFor(m=>m.DateRappel)
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusRappel" class="control-label"></label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,70 @@
+@model Vaccinator.Models.Injection
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Personne</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="uuid" />
+            <div class="form-group">
+                <label asp-for="Maladie" class="control-label"></label>
+                <input asp-for="Maladie" class="form-control" />
+                <span asp-validation-for="Maladie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Marque" class="control-label"></label>
+                <input asp-for="Marque" class="form-control" />
+                <span asp-validation-for="Marque" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumLot" class="control-label"></label>
+                <input asp-for="NumLot" class="form-control" />
+                <span asp-validation-for="NumLot" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Personne" class="control-label"></label>
+                <!--<input asp-for="Personne.nom" class="form-control" />-->
+                <span asp-validation-for="Personne.nom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatePrise" class="control-label"></label>
+                <!--<input asp-for="DatePrise" class="form-control" />-->
+                <select asp-for="DatePrise" class="form-control"/>
+                <span asp-validation-for="DatePrise" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateRappel" class="control-label"></label>
+                <!--<input asp-for="DateRappel" class="form-control" />-->
+                <select asp-for="DateRappel" class="form-control"/>
+                <span asp-validation-for="DateRappel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusRappel" class="control-label"></label>
+                <!--<input asp-for="StatusRappel" class="form-control" />-->
+                <select asp-for="StatusRappel" class="form-control"/>
+                <span asp-validation-for="StatusRappel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
