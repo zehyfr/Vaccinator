@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Vaccinator.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Vaccinator.Controllers
 {
@@ -12,9 +13,34 @@ namespace Vaccinator.Controllers
         private readonly ContextBDD _context = new ContextBDD();
        
         // GET: Personnes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,string searchString)
         {
-            return View(await _context.Personnes.ToListAsync());
+            ViewData["NomSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nom_desc" : "";
+            ViewData["PrenomSortParam"] = sortOrder == "Prenom" ? "prenom_desc" : "Prenom";
+            ViewData["CurrentFilter"] = searchString;
+            
+            
+            
+            var personnes = from s in _context.Personnes select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                personnes = personnes.Where(p => p.nom.Contains(searchString)||
+                                                 p.prenom.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "nom_desc":
+                    personnes = personnes.OrderByDescending(p => p.nom);
+                    break;
+                case "prenom_desc" :
+                    personnes = personnes.OrderByDescending(p => p.prenom);
+                    break;
+                default:
+                    personnes = personnes.OrderBy(p => p.nom);
+                    break;
+            }
+            return View(await personnes.AsNoTracking().ToListAsync());
         }
         
         // GET: Personne/Injection

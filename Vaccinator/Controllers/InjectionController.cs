@@ -50,24 +50,31 @@ namespace Vaccinator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Maladie,Marque,NumLot,DAtePrise,DateRappel,StatusRappel,isRappel")] Injection injection,string Personne)
         {
-            
             var newUuid = Guid.NewGuid().ToString();
             injection.uuid = newUuid;
             injection.StatusRappel = false;
             var newPersonne = await _context.Personnes.FindAsync(Personne);
             injection.Personne = newPersonne;
-            Console.WriteLine(newUuid);
-            Console.WriteLine(injection.Personne.nom);
+            
             //Force la réévaluation de modelState
             ModelState.Clear();
             TryValidateModel(injection);
 
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(injection);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(injection);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             ViewData["listePersonnes"]= new SelectList(_context.Personnes,"uuid","nom");
             return View(injection);
         }
