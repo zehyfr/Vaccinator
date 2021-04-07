@@ -15,7 +15,7 @@ namespace Vaccinator.Controllers
         private readonly ContextBDD _context = new ContextBDD();
        
         // GET: Personnes
-        public async Task<IActionResult> Index(string sortOrder,string searchString,string submitFilter,string ChoosenMaladie)
+        public async Task<IActionResult> Index(string sortOrder,string searchString,string submitFilter,string choosenMaladie,string noRappelSubmit)
         {
             ViewData["NomSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nom_desc" : "";
             ViewData["PrenomSortParam"] = sortOrder == "Prenom" ? "prenom_desc" : "Prenom";
@@ -23,13 +23,18 @@ namespace Vaccinator.Controllers
             
             
             var personnes = from s in _context.Personnes select s;
-
+            if (noRappelSubmit != null)
+            {
+                personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.DateRappel<DateTime.Now).First()) );
+            }
+            
+            //todo not the first injections but all injections for this maladie
             if (submitFilter == "Vaccinés")
             {
-                personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.Maladie==ChoosenMaladie).First()) );
+                personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie).First()) );
             }else if (submitFilter == "Non Vaccinés")
             {
-                personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==ChoosenMaladie).First()));
+                personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie).First()));
             }
 
             if (!String.IsNullOrEmpty(searchString))

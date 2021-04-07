@@ -18,7 +18,7 @@
 
 
 <form asp-action="Index" method="get">
-    @Html.DropDownList("ChoosenMaladie",new SelectList((IEnumerable)@ViewData["listeMaladies"]))
+    @Html.DropDownList("choosenMaladie",new SelectList((IEnumerable)@ViewData["listeMaladies"]))
     <input type="submit" value="Vaccinés" class="btn btn-default" name="submitFilter"/> |
     <input type="submit" value="Non Vaccinés" class="btn btn-default" name="submitFilter"/>
 </form>
@@ -31,6 +31,11 @@
         </p>
     </div>
 </form>
+
+<form asp-action="Index" method="get">
+    <input type="submit" value="Rappel en retard" class="btn btn-default" name="noRappelSubmit"/>
+</form>
+
 <p>
     <a asp-action="Index">Back to Full List</a>
 </p>
