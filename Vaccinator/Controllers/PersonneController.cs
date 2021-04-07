@@ -15,21 +15,30 @@ namespace Vaccinator.Controllers
         private readonly ContextBDD _context = new ContextBDD();
        
         // GET: Personnes
-        public async Task<IActionResult> Index(string sortOrder,string searchString)
+        public async Task<IActionResult> Index(string sortOrder,string searchString,string submitFilter,string ChoosenMaladie)
         {
             ViewData["NomSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nom_desc" : "";
             ViewData["PrenomSortParam"] = sortOrder == "Prenom" ? "prenom_desc" : "Prenom";
             ViewData["CurrentFilter"] = searchString;
             
             
-            
             var personnes = from s in _context.Personnes select s;
+
+            if (submitFilter == "Vaccinés")
+            {
+                personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.Maladie==ChoosenMaladie).First()) );
+            }else if (submitFilter == "Non Vaccinés")
+            {
+                personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==ChoosenMaladie).First()));
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 personnes = personnes.Where(p => p.nom.Contains(searchString)||
                                                  p.prenom.Contains(searchString));
             }
+
+            
             switch (sortOrder)
             {
                 case "nom_desc":
@@ -51,7 +60,7 @@ namespace Vaccinator.Controllers
                     ListMaladies.Add(injection.Maladie);
                 }
             }
-            
+
             ViewData["listeMaladies"]= ListMaladies;
             
             return View(await personnes.AsNoTracking().ToListAsync());
