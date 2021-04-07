@@ -19,17 +19,9 @@
 
 <form asp-action="Index" method="get">
     @Html.DropDownList("choosenMaladie",new SelectList((IEnumerable)@ViewData["listeMaladies"]))
+    @Html.DropDownList("date",new SelectList((IEnumerable)@ViewData["listeYears"],"Selectionnez une date"))
     <input type="submit" value="Vaccinés" class="btn btn-default" name="submitFilter"/> |
     <input type="submit" value="Non Vaccinés" class="btn btn-default" name="submitFilter"/>
-</form>
-
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Choose a date <input type="date" name="date" value="@ViewData["date"]"/>
-            <input type="submit" value="Valider" class="btn btn-default"/> 
-        </p>
-    </div>
 </form>
 
 <form asp-action="Index" method="get">

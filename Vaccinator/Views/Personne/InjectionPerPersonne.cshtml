@@ -2,12 +2,13 @@
 
 @{
     ViewData["Title"] = "InjectionPerPersonne";
+    var personne = ViewData["Personne"] as Personne;
 }
 
-<h1>Injection</h1>
+<h1>Injection de @personne.nom @personne.prenom</h1>
 
 <p>
-    <a asp-controller="Injection" asp-action="Create">Create New</a>
+    <a asp-controller="Injection" asp-route-uuid="@personne.uuid" asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -20,9 +21,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model=>model.NumLot)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model=>model.Personne)
         </th>
         <th>
             @Html.DisplayNameFor(model=>model.DatePrise)
@@ -49,9 +47,6 @@
                 @Html.DisplayFor(modelItem => item.NumLot)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Personne.nom)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.DatePrise)
             </td>
             <td>
@@ -61,9 +56,7 @@
                 @Html.DisplayFor(modelItem => item.StatusRappel)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-uuid="@item.uuid">Edit</a> |
-                <a asp-action="Details" asp-route-uuid="@item.uuid">Details</a> |
-                <a asp-action="Delete" asp-route-uuid="@item.uuid">Delete</a>
+                <a asp-action="Details" asp-route-uuid="@item.uuid">Details</a>
             </td>
         </tr>
     }

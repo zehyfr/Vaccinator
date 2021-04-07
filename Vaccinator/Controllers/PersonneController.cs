@@ -15,26 +15,63 @@ namespace Vaccinator.Controllers
         private readonly ContextBDD _context = new ContextBDD();
        
         // GET: Personnes
-        public async Task<IActionResult> Index(string sortOrder,string searchString,string submitFilter,string choosenMaladie,string noRappelSubmit)
+        public async Task<IActionResult> Index(string sortOrder,string searchString,string submitFilter,string choosenMaladie,string noRappelSubmit,string date)
         {
             ViewData["NomSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nom_desc" : "";
             ViewData["PrenomSortParam"] = sortOrder == "Prenom" ? "prenom_desc" : "Prenom";
             ViewData["CurrentFilter"] = searchString;
             
             
-            var personnes = from s in _context.Personnes select s;
+            var personnes = from p in _context.Personnes select p;
             if (noRappelSubmit != null)
             {
                 personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.DateRappel<DateTime.Now).First()) );
             }
             
+            Console.WriteLine(date);
             //todo not the first injections but all injections for this maladie
             if (submitFilter == "Vaccinés")
             {
-                personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie).First()) );
+                if (date != "Selectionnez une date")
+                {
+                    //select * from personne inner join (injections uuid) where ...
+                    var listInjection = _context.Injections.Where(i =>
+                        i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date));
+                    
+                    //personnes =  personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie && i.DatePrise.Year == int.Parse(date))) );
+
+                    var listPersonne = from p in _context.Personnes
+                        join i in _context.Injections on p.uuid equals i.Personne.uuid into personnesInjection
+                        select new
+                        {
+                            p,
+                            NewPersonnes = personnesInjection.Where(i =>
+                                i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date))
+                        };
+                }
+                else
+                {
+                    var listPersonne = from p in _context.Personnes
+                        join i in _context.Injections on p.uuid equals i.Personne.uuid into personnesInjection
+                        select new
+                        {
+                            p,
+                            NewPersonnes = personnesInjection.Where(i =>
+                                i.Maladie == choosenMaladie)
+                        };
+                }
             }else if (submitFilter == "Non Vaccinés")
             {
-                personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie).First()));
+                if (date != "Selectionnez une date")
+                {
+                    personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie && i.DatePrise.Year == int.Parse(date)).First()));
+  
+                }
+                else
+                {
+                    personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie).First()));
+  
+                }
             }
 
             if (!String.IsNullOrEmpty(searchString))
@@ -42,7 +79,6 @@ namespace Vaccinator.Controllers
                 personnes = personnes.Where(p => p.nom.Contains(searchString)||
                                                  p.prenom.Contains(searchString));
             }
-
             
             switch (sortOrder)
             {
@@ -57,6 +93,14 @@ namespace Vaccinator.Controllers
                     break;
             }
 
+            List<string> listYears = new List<string>();
+            listYears.Add("Selectionnez une date");
+            for (int i = DateTime.Today.Year; i > DateTime.Today.Year - 50; i--)
+            {
+                listYears.Add(i.ToString());
+            }
+            ViewData["listeYears"] = listYears;
+            
             List<string> ListMaladies = new List<string>();
             foreach (var injection in _context.Injections)
             {
@@ -80,6 +124,9 @@ namespace Vaccinator.Controllers
                 return NotFound();
             }
 
+            Personne personne = _context.Personnes.Where(p=>p.uuid==uuid).First();
+            ViewData["Personne"] = personne;
+            
             var listInjectionsPersonne = await _context.Injections
                 .Where(injection => injection.Personne.uuid == uuid).ToListAsync();
 

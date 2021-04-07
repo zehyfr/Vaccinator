@@ -37,9 +37,10 @@ namespace Vaccinator.Controllers
         }
         
         // GET: Injections/Create
-        public IActionResult Create()
+        public IActionResult Create(string uuid)
         {
-            ViewData["listePersonnes"]= new SelectList(_context.Personnes,"uuid","nom");
+            Personne personne = _context.Personnes.Where(p=>p.uuid==uuid).First();
+            ViewData["Personne"] = personne;
             return View();
         }
         
@@ -48,7 +49,7 @@ namespace Vaccinator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Maladie,Marque,NumLot,DAtePrise,DateRappel,StatusRappel,isRappel")] Injection injection,string Personne)
+        public async Task<IActionResult> Create([Bind("Maladie,Marque,NumLot,DatePrise,DateRappel,StatusRappel,isRappel")] Injection injection,string Personne)
         {
             var newUuid = Guid.NewGuid().ToString();
             injection.uuid = newUuid;
@@ -56,6 +57,7 @@ namespace Vaccinator.Controllers
             var newPersonne = await _context.Personnes.FindAsync(Personne);
             injection.Personne = newPersonne;
             
+            Console.WriteLine(newPersonne.uuid);
             //Force la réévaluation de modelState
             ModelState.Clear();
             TryValidateModel(injection);
@@ -65,8 +67,8 @@ namespace Vaccinator.Controllers
                 if (ModelState.IsValid)
                 {
                     _context.Add(injection);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    await _context.SaveChangesAsync();  
+                    return RedirectToAction("InjectionPerPersonne","Personne" ,new{uuid=newPersonne.uuid});
                 }
             }
             catch (Exception e)
@@ -74,9 +76,9 @@ namespace Vaccinator.Controllers
                 Console.WriteLine(e);
                 throw;
             }
+
+            return RedirectToAction("InjectionPerPersonne","Personne" ,new{uuid=newPersonne.uuid});
             
-            ViewData["listePersonnes"]= new SelectList(_context.Personnes,"uuid","nom");
-            return View(injection);
         }
         
         // GET: Injections/Edit/5

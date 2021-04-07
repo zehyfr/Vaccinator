@@ -4,11 +4,12 @@
 
 @{
     ViewData["Title"] = "Create";
+    var personne = ViewData["Personne"] as Personne;
 }
 
-<h1>Create</h1>
+<h1>Creation</h1>
 
-<h4>Injection</h4>
+<h4>Injection pour @personne.nom @personne.prenom</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -41,11 +42,6 @@
                 <span asp-validation-for="NumLot" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Personne" class="control-label"></label>
-                @Html.DropDownListFor(c=>Model.Personne,(SelectList)ViewData["listePersonnes"],"Selectionnez une personne",new {@class ="form-control"})
-                <span asp-validation-for="Personne" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="DatePrise" class="control-label"></label>
                 @Html.EditorFor(m=>m.DatePrise)
             </div>
@@ -53,9 +49,7 @@
                 <label asp-for="DateRappel" class="control-label"></label>
                 @Html.EditorFor(m=>m.DateRappel)
             </div>
-            <div class="form-group">
-                <label asp-for="StatusRappel" class="control-label"></label>
-            </div>
+            <input asp-for="Personne" value="@personne.uuid" hidden>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
@@ -64,7 +58,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="InjectionPerPersonne" asp-controller="Personne" asp-route-uuid="@personne.uuid">Back to List</a>
 </div>
 
 @section Scripts {

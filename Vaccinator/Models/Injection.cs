@@ -11,7 +11,7 @@ namespace Vaccinator.Models
         public string uuid { get; set;}
         
         [Display(Name = "Personne")]
-        [ForeignKey("uuid")]
+        //[ForeignKey("uuid")]
         [Required]
         public virtual Personne Personne { get; set; }
         

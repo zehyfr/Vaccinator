@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Vaccinator.Controllers;
 
 namespace Vaccinator.Migrations
@@ -15,37 +14,41 @@ namespace Vaccinator.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.4")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "5.0.4");
 
             modelBuilder.Entity("Vaccinator.Models.Injection", b =>
                 {
                     b.Property<string>("uuid")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DatePrise")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DateRappel")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Maladie")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Marque")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NumLot")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Personneuuid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("StatusRappel")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("uuid");
+
+                    b.HasIndex("Personneuuid");
 
                     b.ToTable("Injections");
                 });
@@ -53,25 +56,25 @@ namespace Vaccinator.Migrations
             modelBuilder.Entity("Vaccinator.Models.Personne", b =>
                 {
                     b.Property<string>("uuid")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ddn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("nom")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("prenom")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("role")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<char>("sexe")
-                        .HasColumnType("character(1)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("uuid");
 
@@ -81,12 +84,17 @@ namespace Vaccinator.Migrations
             modelBuilder.Entity("Vaccinator.Models.Injection", b =>
                 {
                     b.HasOne("Vaccinator.Models.Personne", "Personne")
-                        .WithMany()
-                        .HasForeignKey("uuid")
+                        .WithMany("injections")
+                        .HasForeignKey("Personneuuid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Personne");
+                });
+
+            modelBuilder.Entity("Vaccinator.Models.Personne", b =>
+                {
+                    b.Navigation("injections");
                 });
 #pragma warning restore 612, 618
         }
