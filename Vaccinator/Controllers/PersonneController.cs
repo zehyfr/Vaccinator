@@ -34,43 +34,40 @@ namespace Vaccinator.Controllers
             {
                 if (date != "Selectionnez une date")
                 {
-                    //select * from personne inner join (injections uuid) where ...
-                    var listInjection = _context.Injections.Where(i =>
-                        i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date));
-                    
-                    //personnes =  personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie && i.DatePrise.Year == int.Parse(date))) );
-
-                    var listPersonne = from p in _context.Personnes
-                        join i in _context.Injections on p.uuid equals i.Personne.uuid into personnesInjection
-                        select new
-                        {
-                            p,
-                            NewPersonnes = personnesInjection.Where(i =>
-                                i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date))
-                        };
+                    // Join des deux tables
+                    personnes = from p in _context.Personnes
+                        join i in _context.Injections on p.uuid equals i.Personne.uuid
+                        where i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date)
+                        select p;
                 }
                 else
                 {
-                    var listPersonne = from p in _context.Personnes
-                        join i in _context.Injections on p.uuid equals i.Personne.uuid into personnesInjection
-                        select new
-                        {
-                            p,
-                            NewPersonnes = personnesInjection.Where(i =>
-                                i.Maladie == choosenMaladie)
-                        };
+                    personnes = from p in _context.Personnes
+                        join i in _context.Injections on p.uuid equals i.Personne.uuid
+                        where i.Maladie == choosenMaladie
+                        select p;
                 }
             }else if (submitFilter == "Non Vaccinés")
             {
                 if (date != "Selectionnez une date")
                 {
-                    personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie && i.DatePrise.Year == int.Parse(date)).First()));
-  
+                    var tmp = from p in _context.Personnes
+                        join i in _context.Injections on p.uuid equals i.Personne.uuid
+                        where i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date)
+                        select p;
+                    personnes = from p in _context.Personnes 
+                        where !(from personne in tmp select personne).Contains(p) 
+                        select p;
                 }
                 else
                 {
-                    personnes = personnes.Where(p => !p.injections.Contains(_context.Injections.Where(i=>i.Maladie==choosenMaladie).First()));
-  
+                    var tmp = from p in _context.Personnes
+                        join i in _context.Injections on p.uuid equals i.Personne.uuid
+                        where i.Maladie == choosenMaladie
+                        select p;
+                    personnes = from p in _context.Personnes 
+                        where !(from personne in tmp select personne).Contains(p) 
+                        select p;
                 }
             }
 
