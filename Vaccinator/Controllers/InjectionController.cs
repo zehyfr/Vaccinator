@@ -49,7 +49,7 @@ namespace Vaccinator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Maladie,Marque,NumLot,DatePrise,DateRappel,StatusRappel,isRappel")] Injection injection,string Personne)
+        public async Task<IActionResult> Create([Bind("Maladie,Marque,NumLot,DatePrise,DateRappel,StatusRappel")] Injection injection,string Personne, bool isRappel)
         {
             var newUuid = Guid.NewGuid().ToString();
             injection.uuid = newUuid;
@@ -57,10 +57,24 @@ namespace Vaccinator.Controllers
             var newPersonne = await _context.Personnes.FindAsync(Personne);
             injection.Personne = newPersonne;
             
+            Console.WriteLine(isRappel);
             Console.WriteLine(newPersonne.uuid);
             //Force la réévaluation de modelState
             ModelState.Clear();
             TryValidateModel(injection);
+
+            if (isRappel)
+            {
+                Console.WriteLine("c'est un rappel");
+                Injection oldInjection = _context.Injections
+                    .Where(i => i.Maladie == injection.Maladie && i.StatusRappel == false).OrderBy(i => i.DatePrise).Last();
+                if (oldInjection != null)
+                {
+                    oldInjection.StatusRappel = true;
+                    _context.Update(oldInjection);
+                    await _context.SaveChangesAsync();
+                }
+            }
 
             try
             {
