@@ -56,23 +56,33 @@ namespace Vaccinator.Controllers
             injection.StatusRappel = false;
             var newPersonne = await _context.Personnes.FindAsync(Personne);
             injection.Personne = newPersonne;
+            injection.Maladie = injection.Maladie.ToUpper();
             
-            Console.WriteLine(isRappel);
-            Console.WriteLine(newPersonne.uuid);
+            
             //Force la réévaluation de modelState
             ModelState.Clear();
             TryValidateModel(injection);
 
             if (isRappel)
             {
-                Console.WriteLine("c'est un rappel");
+                
                 Injection oldInjection = _context.Injections
                     .Where(i => i.Maladie == injection.Maladie && i.StatusRappel == false).OrderBy(i => i.DatePrise).Last();
                 if (oldInjection != null)
                 {
-                    oldInjection.StatusRappel = true;
-                    _context.Update(oldInjection);
-                    await _context.SaveChangesAsync();
+                    if (oldInjection.DatePrise > injection.DatePrise)
+                    {
+                        Personne personne = _context.Personnes.Where(p=>p.uuid==newPersonne.uuid).First();
+                        ViewData["Personne"] = personne;
+                        ViewBag.Message = "La date d injection du rappel ne peut pas etre avant la date d injection de la premiere injection.";
+                        return View();
+                    }
+                    else
+                    {
+                        oldInjection.StatusRappel = true;
+                        _context.Update(oldInjection);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
 

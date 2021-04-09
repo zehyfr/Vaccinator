@@ -28,7 +28,7 @@
               </div>
             <div class="form-group">
                 <label asp-for="Maladie" class="control-label"></label>
-                <input asp-for="Maladie" class="form-control" />
+                <input asp-for="Maladie" class="form-control" style="text-transform:uppercase" />
                 <span asp-validation-for="Maladie" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -56,9 +56,17 @@
         </form>
     </div>
 </div>
+@if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+        </script>
+    }
 
 <div>
-    <a asp-action="InjectionPerPersonne" asp-controller="Personne" asp-route-uuid="@personne.uuid">Back to List</a>
+    <a asp-action="InjectionPerPersonne" asp-controller="Personne" asp-route-uuid="@personne.uuid">Retour à la liste dess injections de @personne.nom @personne.prenom</a>
 </div>
 
 @section Scripts {

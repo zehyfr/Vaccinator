@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/axel/Cours/B3/Dotnet/Vaccinator/Vaccinator/Vaccinator.csproj": {}
+    "/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/Vaccinator.csproj": {}
   },
   "projects": {
-    "/home/axel/Cours/B3/Dotnet/Vaccinator/Vaccinator/Vaccinator.csproj": {
+    "/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/Vaccinator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/axel/Cours/B3/Dotnet/Vaccinator/Vaccinator/Vaccinator.csproj",
+        "projectUniqueName": "/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/Vaccinator.csproj",
         "projectName": "Vaccinator",
-        "projectPath": "/home/axel/Cours/B3/Dotnet/Vaccinator/Vaccinator/Vaccinator.csproj",
-        "packagesPath": "/home/axel/.nuget/packages/",
-        "outputPath": "/home/axel/Cours/B3/Dotnet/Vaccinator/Vaccinator/obj/",
+        "projectPath": "/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/Vaccinator.csproj",
+        "packagesPath": "/home/baptistebrs/.nuget/packages/",
+        "outputPath": "/home/baptistebrs/Documents/EPSI/DotNet/Vaccinator/Vaccinator/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/axel/.nuget/NuGet/NuGet.Config"
+          "/home/baptistebrs/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"

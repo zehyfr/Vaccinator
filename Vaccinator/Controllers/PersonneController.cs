@@ -25,11 +25,15 @@ namespace Vaccinator.Controllers
             var personnes = from p in _context.Personnes select p;
             if (noRappelSubmit != null)
             {
-                personnes = personnes.Where(p => p.injections.Contains(_context.Injections.Where(i=>i.DateRappel<DateTime.Now).First()) );
+                personnes = from p in _context.Personnes
+                    join i in _context.Injections on p.uuid equals i.Personne.uuid
+                    where i.DateRappel < DateTime.Now && i.StatusRappel==false
+                    select p;
+                personnes = personnes.Distinct();
             }
             
-            Console.WriteLine(date);
-            //todo not the first injections but all injections for this maladie
+            
+            
             if (submitFilter == "Vaccinés")
             {
                 if (date != "Selectionnez une date")
@@ -39,6 +43,7 @@ namespace Vaccinator.Controllers
                         join i in _context.Injections on p.uuid equals i.Personne.uuid
                         where i.Maladie == choosenMaladie && i.DatePrise.Year == int.Parse(date)
                         select p;
+                    personnes = personnes.Distinct();
                 }
                 else
                 {
@@ -46,6 +51,7 @@ namespace Vaccinator.Controllers
                         join i in _context.Injections on p.uuid equals i.Personne.uuid
                         where i.Maladie == choosenMaladie
                         select p;
+                    personnes = personnes.Distinct();
                 }
             }else if (submitFilter == "Non Vaccinés")
             {
@@ -58,6 +64,7 @@ namespace Vaccinator.Controllers
                     personnes = from p in _context.Personnes 
                         where !(from personne in tmp select personne).Contains(p) 
                         select p;
+                    personnes = personnes.Distinct();
                 }
                 else
                 {
@@ -68,13 +75,14 @@ namespace Vaccinator.Controllers
                     personnes = from p in _context.Personnes 
                         where !(from personne in tmp select personne).Contains(p) 
                         select p;
+                    personnes = personnes.Distinct();
                 }
             }
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                personnes = personnes.Where(p => p.nom.Contains(searchString)||
-                                                 p.prenom.Contains(searchString));
+                personnes = personnes.Where(p => p.nom.ToUpper().Contains(searchString.ToUpper())||
+                                                 p.prenom.ToUpper().Contains(searchString.ToUpper()));
             }
             
             switch (sortOrder)
